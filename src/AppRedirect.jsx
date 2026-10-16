@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./AppRedirect.css";
 
 const appStoreUrl =
@@ -32,12 +32,7 @@ function PhonePreview({ className, image, title, copy, action }) {
 }
 
 function AppRedirect() {
-  const [countdown, setCountdown] = useState(3);
-
   useEffect(() => {
-    const countdownTimer = window.setInterval(() => {
-      setCountdown((value) => Math.max(value - 1, 0));
-    }, 1000);
     const redirectTimer = window.setTimeout(() => {
       const isAndroid = /Android/i.test(navigator.userAgent);
 
@@ -48,12 +43,9 @@ function AppRedirect() {
       } else {
         window.location.replace(appStoreUrl);
       }
-    }, 3000);
+    }, 1000);
 
-    return () => {
-      window.clearInterval(countdownTimer);
-      window.clearTimeout(redirectTimer);
-    };
+    return () => window.clearTimeout(redirectTimer);
   }, []);
 
   return (
@@ -88,9 +80,6 @@ function AppRedirect() {
             live audio and video conversations.
           </p>
           <div className="hero-actions">
-            <p className="redirect-countdown" role="status">
-              Opening RaniTalk in <strong>{countdown}</strong>…
-            </p>
             <a className="store-badge" href={appStoreUrl} aria-label="Download on Google Play">
               <img src="/playstoreBtn.svg" alt="Get it on Google Play" />
             </a>
