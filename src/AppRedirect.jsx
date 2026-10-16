@@ -1,78 +1,149 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./AppRedirect.css";
 
-function AppRedirect() {
-  useEffect(() => {
-    const isAndroid = /Android/i.test(navigator.userAgent);
+const appStoreUrl =
+  "https://play.google.com/store/apps/details?id=com.ranitalk";
 
+function PhonePreview({ className, image, title, copy, action }) {
+  return (
+    <div className={`phone-preview ${className}`}>
+      <div className="phone-screen">
+        <div className="phone-speaker" />
+        <div
+          className="phone-image"
+          style={{ backgroundImage: `url(${image})` }}
+        >
+          <span className="skip">SKIP</span>
+          <div className="phone-actions">
+            <span>▮◀</span>
+            <b>●</b>
+            <span>◉</span>
+          </div>
+        </div>
+        <div className="phone-copy">
+          <span className="phone-kicker">RANITALK</span>
+          <h3>{title}</h3>
+          <p>{copy}</p>
+          <button type="button">{action}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AppRedirect() {
+  const [countdown, setCountdown] = useState(3);
+
+  useEffect(() => {
+    const countdownTimer = window.setInterval(() => {
+      setCountdown((value) => Math.max(value - 1, 0));
+    }, 1000);
     const redirectTimer = window.setTimeout(() => {
+      const isAndroid = /Android/i.test(navigator.userAgent);
+
       if (isAndroid) {
-        // Ask Android to open the installed Google Play Store app.
         window.location.replace(
           "intent://details?id=com.ranitalk#Intent;scheme=market;package=com.android.vending;end",
         );
       } else {
-        window.location.href =
-          "https://play.google.com/store/apps/details?id=com.ranitalk";
+        window.location.replace(appStoreUrl);
       }
-    },300 );
+    }, 3000);
 
-    return () => window.clearTimeout(redirectTimer);
+    return () => {
+      window.clearInterval(countdownTimer);
+      window.clearTimeout(redirectTimer);
+    };
   }, []);
 
   return (
-    <main className="redirect-page">
-      <section className="redirect-card" aria-labelledby="redirect-title">
-        <div className="redirect-brand" aria-hidden="true">
-          <span className="redirect-brand-mark">
-            <svg viewBox="0 0 32 32" fill="none">
-              <path
-                d="M7 8.75A3.75 3.75 0 0 1 10.75 5h10.5A3.75 3.75 0 0 1 25 8.75v8.5A3.75 3.75 0 0 1 21.25 21H15l-6.5 5v-5.2A3.75 3.75 0 0 1 7 17.25v-8.5Z"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M12 11h8M12 15h5"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
+    <main className="landing-page">
+      {/* <nav className="landing-nav" aria-label="Main navigation">
+        <a className="brand" href="#top" aria-label="RaniTalk home">
+          <img src="/favicon.svg" alt="" />
+          <span>
+            Rani<span>Talk</span>
           </span>
-          <span className="redirect-brand-name">RaniTalk</span>
-        </div>
-
-        <div className="redirect-loader" role="status" aria-label="Loading">
-          <span className="redirect-loader-ring" />
-          <span className="redirect-loader-center">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M7 3.5 18.5 12 7 20.5v-17Z" fill="currentColor" />
-            </svg>
-          </span>
-        </div>
-
-        <p className="redirect-eyebrow">ONE MOMENT PLEASE</p>
-        <h1 id="redirect-title">Opening Google Play</h1>
-        <p className="redirect-description">
-          Hang tight, we’re taking you to the RaniTalk app page.
-        </p>
-
-        <a className="redirect-link" href="market://details?id=com.ranitalk">
-          <span>Open in Play Store app</span>
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path
-              d="M4 10h12m-5-5 5 5-5 5"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
         </a>
-
-        <p className="redirect-note">If you aren’t redirected, tap the button above.</p>
+        <div className="nav-links">
+          <a href="#features">Why RaniTalk</a>
+          <a href="#about">About us</a>
+        </div>
+        <a className="nav-download" href={appStoreUrl}>
+          Download app <span>↗</span>
+        </a>
+      </nav> */}
+      <section className="hero-section" id="top">
+        <div className="hero-copy">
+          {/* <div className="eyebrow">
+            <span>✦</span> Talk. Connect. Belong.
+          </div> */}
+          <h1>
+            Real conversations.
+            <br />
+            <em>Real connections.</em>
+          </h1>
+          <p className="hero-description">
+            Meet kind, interesting people and make genuine connections through
+            live audio and video conversations.
+          </p>
+          <div className="hero-actions">
+            <p className="redirect-countdown" role="status">
+              Opening RaniTalk in <strong>{countdown}</strong>…
+            </p>
+            <a className="store-badge" href={appStoreUrl} aria-label="Download on Google Play">
+              <img src="/playstoreBtn.svg" alt="Get it on Google Play" />
+            </a>
+            <a className="store-badge" href={appStoreUrl} aria-label="Download on the App Store">
+              <img src="/appstoreBtn.svg" alt="Download on the App Store" />
+            </a>
+          </div>
+          {/* <div className="trust-row">
+            <div className="avatar-stack">
+              <span>R</span>
+              <span>✦</span>
+              <span>♡</span>
+            </div>
+            <p>
+              <strong>50,000+</strong> people are already talking
+            </p>
+          </div> */}
+        </div>
+        <div
+          className="hero-visual"
+          id="features"
+          aria-label="RaniTalk app previews"
+        >
+          <div className="glow glow-one" />
+          <div className="glow glow-two" />
+          <div className="orbit orbit-one" />
+          <div className="orbit orbit-two" />
+          <PhonePreview
+            className="phone-back"
+          image="/image2.png"
+            title="Always stay anonymous"
+            copy="Talk freely and enjoy real conversations — no need to share your identity."
+            action="Get started"
+          />
+          <PhonePreview
+            className="phone-front"
+          image="/image1.png"
+            title="Meet real people"
+            copy="Discover verified, genuine people and start real conversations in seconds."
+            action="Next"
+          />
+          <div className="floating-pill pill-top">
+            ♡ <span>Good vibes only</span>
+          </div>
+          <div className="floating-pill pill-bottom">
+            ✦ <span>Private &amp; safe</span>
+          </div>
+        </div>
       </section>
+      <footer id="about">
+        <span>© 2026 RaniTalk</span>
+        <span>Made for meaningful conversations</span>
+      </footer>
     </main>
   );
 }
